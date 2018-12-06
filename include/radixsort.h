@@ -14,7 +14,7 @@ using std::endl;
 
 namespace edu { namespace vcccd { namespace vc { namespace csv15 {
 
-                template <class T>
+                /*template <class T>
                 void print(T *array, size_t size)   //debugging tool
                 {
                     for (size_t i = 0; i < size; i++)
@@ -22,7 +22,7 @@ namespace edu { namespace vcccd { namespace vc { namespace csv15 {
                         cout << array[i] << " | ";
                     }
                     cout << endl;
-                }
+                }*/
 
                 template<class T>
                 void myRadix(T *array, size_t size)
@@ -31,36 +31,38 @@ namespace edu { namespace vcccd { namespace vc { namespace csv15 {
                     {
                         return ;
                     }
-                    T bucket[10][size];
-                    //T digitCounter[10];
-                    //std::fill(digitCounter, digitCounter+10, 0);
-                    size_t maxVal = 0;
+                    T radix[10][size];
+                    size_t maxVal = 0;  ///Max Value
                     size_t digitPos =1;
                     size_t pass = 1;
 
-                    for(size_t i = 0; i < size; i++)
+                    for(size_t i = 0; i < size; i++)    ///Find Max Value in array
                     {
-                        if(array[i] > maxVal) maxVal = array[i];
+                        if(array[i] > maxVal)
+                        {
+                            maxVal = array[i];
+                        }
                     }
 
                     while(maxVal / digitPos > 0)
                     {
-                        T digitCounter[10];
-                        std::fill(digitCounter, digitCounter+10, 0);
+                        T bucketSize[10]; /// Tracks how elements in each bucket
+                        std::fill(bucketSize, bucketSize+10, 0);
                         for(size_t i = 0; i < size; i++)
                         {
-                            size_t bucketInd = (array[i] / digitPos) % 10;
-                            bucket [bucketInd][digitCounter[bucketInd]++] = array[i];
+                            size_t radixInd = (array[i] / digitPos) % 10;  ///Find n-th digit and set Bucket Index
+                            radix [radixInd][bucketSize[radixInd]++] = array[i];
                         }
-                        for (size_t i = 0, arrInd = 0; i < 10; i++)
+                        for (size_t i = 0, arrInd = 0; i < 10; i++) ///Rewrite to original array
                         {
-                            for(size_t j = 0; j < digitCounter[i]; j++, arrInd++)
+                            for(size_t j = 0; j < bucketSize[i]; j++)
                             {
-                                array[arrInd] = bucket[i][j];
+                                array[arrInd] = radix[i][j];
+                                arrInd ++;
                             }
                         }
-                        cout << "pass #" << pass++ << ": "; //debugging tool
-                        print(array,size);  //debugging tool
+                        //cout << "pass #" << pass++ << ": "; //debugging tool
+                        //print(array,size);  //debugging tool
 
                         digitPos *= 10;
                     }
